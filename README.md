@@ -9,4 +9,4 @@ If you want to program a tweet ad a file to the same folder of the bot called tw
 <pre><code>04/30 17:20 Hi I'm a tweet</pre></code>
 Where you get the date of tweeting and the text that will be tweet.
 
-If you have any questions about it contact me @Gikdew.
+If you have any questions about it contact me <a href="http://twitter.com/gikdew">@Gikdew.</a>
