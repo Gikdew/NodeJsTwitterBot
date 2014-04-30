@@ -25,7 +25,9 @@ var retweetEvery = 1000 * 60 * 60 * 3;
 var tweetEvery = 1000 * 60;
 
 //USERS
+//Your user Name
 var mainUser = 'Gikdew';
+//The user you are going to scrape users from
 var secondUser = 'photonstorm';
 
 //Counter
