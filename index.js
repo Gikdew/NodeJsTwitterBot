@@ -257,6 +257,7 @@ function unfollowUser(id) {
 
 //STATS MODULE
 function getUserData(user) {
+    logConsole(" Stats".cyan);
     T.get('users/lookup', {
         screen_name: user
     }, function(err, reply) {
@@ -289,6 +290,7 @@ function startRetweet() {
 }
 
 function postRetweet() {
+    logConsole(" PostRetweet".cyan);
     T.get('search/tweets', mediaArtsSearch, function(error, data) {
         if (!error) {
             var retweetId = data.statuses[0].id_str;
@@ -351,6 +353,7 @@ function checkTweets(tweets) {
 }
 
 function postTweet(text) {
+    logConsole(" PostTweet".cyan);
     T.post('statuses/update', {
         status: text
     }, function(err, replay) {
