@@ -1,0 +1,22 @@
+{
+    "name": "twitterBot",
+    "version": "0.0.0",
+    "description": "Twitter Bot to automate my personal twitter account.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "twitter",
+        "bot",
+        "automatic",
+        "account",
+        "personal"
+    ],
+    "author": "Gikdew",
+    "license": "ISC",
+    "dependencies": {
+        "twit": "latest",
+        "colors": "latest"
+    }
+}

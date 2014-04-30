@@ -6,8 +6,7 @@ var fs = require('fs');
 
 var T = new Twit(config);
 
-var startTime = new Date();
-startTime = startTime.getTime();
+var startTime = new Date() getTime();
 var now = new Date();
 
 //VARIABLES
@@ -27,7 +26,7 @@ var tweetEvery = 1000 * 60;
 
 //USERS
 var mainUser = 'Gikdew';
-var secondUser = 'html5GameDevs';
+var secondUser = 'photonstorm';
 
 //Counter
 var followCounter = 0;
@@ -55,7 +54,6 @@ getFollowers(secondUser);
 
 //SCRAPING
 //GET IDS OF THE NEW USERS I WILL BE FOLLOWING
-
 function getFollowers(user) {
     logConsole(" GetFollowers".cyan);
     T.get('followers/ids', {
@@ -72,7 +70,6 @@ function getFollowers(user) {
 }
 
 //GET IDS OF THE USERS I'M FOLLOWING
-
 function getFollowing(user) {
     logConsole(" GetFollowing".cyan);
     T.get('friends/ids', {
@@ -84,6 +81,7 @@ function getFollowing(user) {
             followqueue = removeDuplicates(followers, following);
             followqueue = removeDuplicates(followers, readFileIds());
 
+            //START ALL THE INTERVALS
             unfollowQueue = following;
             startFollowing(followqueue);
             startUnfollowing(unfollowQueue);
@@ -97,6 +95,7 @@ function getFollowing(user) {
     })
 }
 
+//REMOVE DUPLICATES FROM TWO ARRAYS
 function removeDuplicates(array1, array2) {
     logConsole(" RemoveDuplicates".cyan);
     for (var i = 0; i < array2.length; i++) {
@@ -148,69 +147,6 @@ function startFollowing(queue) {
         }
 
     }, followEvery);
-}
-
-function handleError(func, err) {
-    var date = (getHours() + ":" + getMinutes());
-    console.log((" " + date + " " + func + " " + err).red);
-    fileLogger('consoleLog.txt', " " + getDate() + " " + func + " " + err);
-}
-
-function logConsole(txt) {
-    var date = (getHours() + ":" + getMinutes());
-    console.log(" " + date + txt);
-    fileLogger('consoleLog.txt', " " + getDate() + txt.replace('[39m', '').replace('[36m', '').replace('[32m', '').replace('[33m',
-        ''));
-}
-
-function getMinutes() {
-    var minutes = new Date().getMinutes();
-    if (minutes < 10) {
-        return "0" + minutes.toString();
-    } else {
-        return minutes.toString();
-    }
-}
-
-function getHours() {
-    var hours = new Date().getHours();
-    if (hours < 10) {
-        return "0" + hours.toString();
-    } else {
-        return hours.toString();
-    }
-}
-
-function getMonth() {
-    var month = (new Date().getMonth()) + 1;
-    if (month < 10) {
-        return "0" + month.toString();
-    } else {
-        return month.toString();
-    }
-}
-
-function getDay() {
-    var day = new Date().getDate();
-    if (day < 10) {
-        return "0" + day.toString();
-    } else {
-        return day.toString();
-    }
-}
-
-function getDate() {
-    return getMonth() + "/" + getDay() + /*"/" + aDate.getYear() +*/ " " + getHours() + ":" + getMinutes();
-}
-
-function fileLogger(path, text) {
-    fs.appendFile(path, '\r\n' + text, function(err) {
-        if (err) {
-            handleError("fileLogger", path + " " + err);
-        } else {
-            //logConsole(path + " has been updated with " + text);
-        }
-    });
 }
 
 //Reset variables every day
@@ -364,4 +300,69 @@ function postTweet(text) {
         }
 
     })
+}
+
+//Console and File loggers
+function handleError(func, err) {
+    var date = (getHours() + ":" + getMinutes());
+    console.log((" " + date + " " + func + " " + err).red);
+    fileLogger('consoleLog.txt', " " + getDate() + " " + func + " " + err);
+}
+
+function logConsole(txt) {
+    var date = (getHours() + ":" + getMinutes());
+    console.log(" " + date + txt);
+    fileLogger('consoleLog.txt', " " + getDate() + txt.replace('[39m', '').replace('[36m', '').replace('[32m', '').replace('[33m',
+        ''));
+}
+
+function fileLogger(path, text) {
+    fs.appendFile(path, '\r\n' + text, function(err) {
+        if (err) {
+            handleError("fileLogger", path + " " + err);
+        } else {
+            //logConsole(path + " has been updated with " + text);
+        }
+    });
+}
+
+//Functions for Getting and Formatting the date
+function getMinutes() {
+    var minutes = new Date().getMinutes();
+    if (minutes < 10) {
+        return "0" + minutes.toString();
+    } else {
+        return minutes.toString();
+    }
+}
+
+function getHours() {
+    var hours = new Date().getHours();
+    if (hours < 10) {
+        return "0" + hours.toString();
+    } else {
+        return hours.toString();
+    }
+}
+
+function getMonth() {
+    var month = (new Date().getMonth()) + 1;
+    if (month < 10) {
+        return "0" + month.toString();
+    } else {
+        return month.toString();
+    }
+}
+
+function getDay() {
+    var day = new Date().getDate();
+    if (day < 10) {
+        return "0" + day.toString();
+    } else {
+        return day.toString();
+    }
+}
+
+function getDate() {
+    return getMonth() + "/" + getDay() + /*"/" + aDate.getYear() +*/ " " + getHours() + ":" + getMinutes();
 }
