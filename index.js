@@ -15,18 +15,19 @@ var followers = [];
 var following = [];
 var followQueue = [];
 var unfollowQueue = [];
+var tweetQueue = [];
 
 //Milliseconds
 var tweetEvery = 1000 * 60 * 60;
 var followEvery = 1000 * 87.2; //990 per day 87.2
-var unfollowEvery = 1000 * 50; //390 per day 221.6
+var unfollowEvery = 1000 * 300; //390 per day 221.6
 var statsEvery = 1000 * 85.3;
-var retweetEvery = 1000 * 60 * 51;
-var tweetEvery = 1000 * 60
+var retweetEvery = 1000 * 60 * 60 * 3;
+var tweetEvery = 1000 * 60;
 
 //USERS
 var mainUser = 'Gikdew';
-var secondUser = 'lessmilk_';
+var secondUser = 'html5GameDevs';
 
 //Counter
 var followCounter = 0;
@@ -87,6 +88,7 @@ function getFollowing(user) {
             startFollowing(followqueue);
             startUnfollowing(unfollowQueue);
             startStats();
+            startTweeting();
             startRetweet();
 
         } else {
@@ -139,7 +141,7 @@ function followUser(id) {
 function startFollowing(queue) {
     logConsole(" StartFollowing".cyan);
     followInterval = setInterval(function() {
-        if ((following.length + followCounter) < 1800) {
+        if ((following.length + followCounter) < 1990) {
             followUser(queue[0]);
         } else {
             handleError("startFollowing", "+2000 limit! " + (following.length + followCounter))
@@ -308,6 +310,55 @@ function postRetweet() {
 function startTweeting() {
     logConsole(" StartTweeting".cyan);
     tweetInterval = setInterval(function() {
-        postTweet();
-    }, retweetEvery);
+        checkTweets(readFile());
+    }, 1000 * 60);
+}
+
+function readFile() {
+    var fs = require('fs');
+    var data = fs.readFileSync('tweets.txt');
+    array = data.toString().split("\n");
+    for (i in array) {
+        tweetQueue[i] = {
+            time: array[i].substring(0, array[i].indexOf(' ', 6)),
+            tweet: array[i].substring(array[i].indexOf(' ', 6), array[i].length)
+        }
+        if (tweetQueue[i].tweet.length < 10 || tweetQueue[i].time.length < 5) {
+            tweetQueue.splice(i, 1);
+        }
+    }
+    return tweetQueue;
+}
+
+function checkTweets(tweets) {
+    for (i in tweets) {
+        if (tweets[i].time === getDate()) {
+            if (tweetQueue[i].tweet.length > 10) {
+                //POST TWEET
+                postTweet(tweetQueue[i].tweet);
+                //REMOVE LINE
+                tweetQueue.splice(i, 1);
+                fs.writeFileSync('tweets.txt', '');
+                tweetQueue.forEach(function(line) {
+                    fs.appendFileSync("tweets.txt", line.time + line.tweet + "\n");
+                });
+
+            } else {
+                handleError('checkTweets', 'Error: Short Tweet ' + tweetQueue[i].tweet.length)
+            }
+        }
+    }
+}
+
+function postTweet(text) {
+    T.post('statuses/update', {
+        status: text
+    }, function(err, replay) {
+        if (!err) {
+            logConsole((" Tweet Posted: " + text).green);
+        } else {
+            handleError('postTweet', err);
+        }
+
+    })
 }
